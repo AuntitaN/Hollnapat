@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>จะเป็นแฟนกันไหม 💗</title>
+  <meta name="description" content="หน้าเว็บขอเป็นแฟนแบบน่ารัก ๆ พร้อมวิดีโอ YouTube และปุ่มให้คำตอบ" />
+  <meta property="og:title" content="จะเป็นแฟนกันไหม 💗" />
+  <meta property="og:description" content="เว็บพิเศษจากฉันถึงเธอ — เปิดวิดีโอแล้วกดตอบได้เลย :)" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'><rect width='120' height='120' fill='%23ffeef5'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' font-size='64'>💗</text></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 120 120%22><text y=%22.9em%22 font-size=%2290%22>💗</text></svg>">
+  <style>
+    :root{
+      --bg: #fff5f9;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --brand: #ec4899; /* pink-500 */
+      --brand-dark: #db2777; /* pink-600 */
+      --ok: #10b981; /* emerald-500 */
+      --no: #ef4444; /* red-500 */
+      --shadow: 0 10px 25px rgba(0,0,0,.08);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;font-family: 'Inter',system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,'Noto Sans',sans-serif; background:radial-gradient(1200px 800px at 10% -10%, #ffe3f1 0, transparent 50%), radial-gradient(900px 600px at 110% 10%, #ffd6eb 0, transparent 50%), var(--bg); color:var(--text);}
+    .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:28px}
+    .card{width:min(920px,100%);background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;position:relative}
+    header{padding:28px 24px 8px;display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;text-align:center}
+    header h1{margin:0;font-size:clamp(22px,2.8vw,34px);line-height:1.2}
+    header p{margin:6px 0 0;color:var(--muted);font-size:clamp(14px,1.6vw,16px)}
+
+    .video{position:relative; width:100%; aspect-ratio:16/9; background:#000}
+    .video iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+
+    .content{padding:22px}
+    .note{font-size:clamp(15px,1.8vw,18px); line-height:1.6}
+
+    .cta{display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-top:18px}
+    button{appearance:none;border:0;border-radius:14px;padding:14px 20px;font-weight:700;cursor:pointer;transition:transform .05s ease,box-shadow .2s ease,background .2s ease;box-shadow:0 6px 14px rgba(0,0,0,.08)}
+    .yes{background:linear-gradient(180deg, #f472b6, var(--brand)); color:white}
+    .yes:hover{filter:brightness(1.05)}
+    .yes:active{transform:translateY(1px)}
+    .no{background:#fff0f1; color:#b91c1c}
+    .no:hover{background:#ffe4e6}
+    .no:active{transform:translateY(1px)}
+
+    .foot{padding:18px 22px; border-top:1px solid #f3e0ea; display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; color:var(--muted); font-size:14px}
+    .heart{display:inline-flex; width:28px; height:28px; align-items:center; justify-content:center; border-radius:50%; background:#ffe4ef}
+
+    /* Toast */
+    .toast{position:fixed; inset:auto 16px 16px auto; background:#111827; color:#fff; padding:12px 16px; border-radius:12px; opacity:0; transform:translateY(8px); transition:all .3s ease; box-shadow:var(--shadow); font-size:14px;}
+    .toast.show{opacity:1; transform:translateY(0)}
+
+    /* Confetti canvas */
+    #fx{position:fixed; inset:0; pointer-events:none}
+
+    /* Floating hearts background */
+    .bg-heart{position:absolute; opacity:.18; font-size:26px; animation:float 12s linear infinite;}
+    @keyframes float{ 0%{ transform:translateY(0) } 100%{ transform:translateY(-140vh) } }
+
+    /* Responsive tweaks */
+    @media (max-width:520px){
+      .cta{justify-content:space-between}
+      button{flex:1}
+      .foot{justify-content:center;text-align:center}
+    }
+  </style>
+</head>
+<body>
+  <canvas id="fx"></canvas>
+  <div class="wrap">
+    <div class="card">
+      <header>
+        <span class="heart" aria-hidden>💗</span>
+        <h1>จะเป็นแฟนกันไหม</h1>
+        <p>มีเรื่องอยากบอกกับเธอ เปิดวิดีโอด้านล่างก่อนนะ แล้วค่อยกดตอบได้เลย :)</p>
+      </header>
+
+      <div class="video" id="playerWrap" aria-label="วิดีโอจาก YouTube เพื่อเธอ">
+        <!-- YouTube iframe will be injected by JS for easy editing -->
+      </div>
+
+      <div class="content">
+        <p class="note">
+          ตั้งแต่รู้จักกันมา ทุกวันของฉันดีขึ้นเสมอ ฉันตั้งใจทำหน้านี้เพื่อเธอคนเดียวเลย 💞
+          ถ้าเธอพร้อม… เรามาเริ่มต้นบทใหม่ด้วยกันนะ
+        </p>
+        <div class="cta">
+          <button class="yes" id="yesBtn">ตกลงเป็นแฟน 💘</button>
+          <button class="no" id="noBtn">ยังไม่พร้อม / ปฏิเสธ</button>
+        </div>
+      </div>
+
+      <div class="foot">
+        <span>ทำด้วยใจ โดย <strong id="byName">ฉัน</strong></span>
+        <span>วันที่สร้าง: <time id="buildDate"></time></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    // ====== CONFIG (แก้ไขค่าด้านล่างนี้ได้เลย) ======
+    const YOUTUBE_ID = 'dQw4w9WgXcQ'; // 👉 ใส่รหัสวิดีโอ YouTube ของคุณ (ส่วนหลัง v= )
+    const YOUR_NAME = 'ชื่อของคุณ';   // 👉 ชื่อผู้สร้าง แสดงที่มุมล่าง
+    const ENABLE_PLAYFUL_NO = true;    // 👉 true = ปุ่ม "ปฏิเสธ" แอบหนีเมาส์แบบขำๆ (คลิกได้ถ้าทัน)
+
+    // ====== Inject YouTube iframe responsively ======
+    const playerWrap = document.getElementById('playerWrap');
+    playerWrap.innerHTML = `<iframe src="https://www.youtube.com/embed/${YOUTUBE_ID}?rel=0&modestbranding=1&playsinline=1" title="YouTube video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
+
+    // Footer info
+    document.getElementById('byName').textContent = YOUR_NAME || 'ฉัน';
+    document.getElementById('buildDate').textContent = new Date().toLocaleDateString('th-TH', {year:'numeric', month:'long', day:'numeric'});
+
+    // Floating hearts background (decorative)
+    const card = document.querySelector('.card');
+    const hearts = ['💗','💖','💞','💘'];
+    for(let i=0;i<18;i++){
+      const s = document.createElement('div');
+      s.className = 'bg-heart';
+      s.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+      s.style.left = Math.random()*100 + '%';
+      s.style.bottom = (-20 - Math.random()*120) + 'px';
+      s.style.animationDuration = (10 + Math.random()*14) + 's';
+      s.style.fontSize = (18 + Math.random()*22) + 'px';
+      card.appendChild(s);
+    }
+
+    // Toast helper
+    const toast = document.getElementById('toast');
+    function showToast(msg){
+      toast.textContent = msg; toast.classList.add('show');
+      setTimeout(()=>toast.classList.remove('show'), 2600);
+    }
+
+    // Confetti (lightweight)
+    const fx = document.getElementById('fx');
+    const ctx = fx.getContext('2d');
+    function resize(){ fx.width = innerWidth; fx.height = innerHeight }
+    addEventListener('resize', resize); resize();
+    let confetti = [];
+    function boom(){
+      confetti = Array.from({length:180}, () => ({
+        x: fx.width/2 + (Math.random()-0.5)*120,
+        y: fx.height/2,
+        r: 2 + Math.random()*4,
+        vx: (Math.random()-0.5)*6,
+        vy: (-6 - Math.random()*6),
+        a: 0.98 + Math.random()*0.02
+      }));
+    }
+    function loop(){
+      ctx.clearRect(0,0,fx.width,fx.height);
+      confetti.forEach(p=>{
+        p.vx *= 0.995; p.vy += 0.15; p.vy *= p.a; p.x+=p.vx; p.y+=p.vy;
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+        ctx.fillStyle = `hsl(${Math.random()*360},100%,60%)`; ctx.fill();
+      });
+      requestAnimationFrame(loop);
+    } loop();
+
+    // Buttons behavior
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn  = document.getElementById('noBtn');
+
+    yesBtn.addEventListener('click', ()=>{
+      boom();
+      showToast('เย้! ขอบคุณที่ตกลงนะ 💗');
+      const msg = document.createElement('div');
+      msg.style.position='fixed'; msg.style.inset='0'; msg.style.display='grid'; msg.style.placeItems='center';
+      msg.style.background='rgba(255,255,255,.85)'; msg.style.backdropFilter='blur(4px)';
+      msg.innerHTML = `<div style="background:white;padding:24px 28px;border-radius:16px;box-shadow:var(--shadow);max-width:540px;text-align:center;">
+        <div style="font-size:42px;">🎉</div>
+        <h2 style="margin:10px 0 6px; font-size:clamp(22px,2.6vw,28px);">เป็นแฟนกันแล้วนะ!</h2>
+        <p style="color:#374151; line-height:1.7;">ดีใจที่สุดเลย ต่อไปนี้ขอสัญญาว่าจะดูแลและอยู่ข้าง ๆ เธอเสมอ 💞</p>
+        <button id="closeOk" style="margin-top:10px;background:#111827;color:#fff;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;">ปิด</button>
+      </div>`;
+      document.body.appendChild(msg);
+      msg.querySelector('#closeOk').addEventListener('click',()=> msg.remove());
+    });
+
+    if(ENABLE_PLAYFUL_NO){
+      let dodgeCount = 0;
+      noBtn.addEventListener('mouseenter', (e)=>{
+        if(dodgeCount<3){
+          const rect = noBtn.getBoundingClientRect();
+          const nx = Math.random()*(window.innerWidth-rect.width-40)+20;
+          const ny = Math.random()*(window.innerHeight-rect.height-40)+20;
+          noBtn.style.position='fixed';
+          noBtn.style.left = nx+'px';
+          noBtn.style.top  = ny+'px';
+          dodgeCount++;
+        }
+      });
+    }
+
+    noBtn.addEventListener('click', ()=>{
+      showToast('โอเค เคารพการตัดสินใจของเธอเสมอ 🫶');
+      const msg = document.createElement('div');
+      msg.style.position='fixed'; msg.style.inset='0'; msg.style.display='grid'; msg.style.placeItems='center';
+      msg.style.background='rgba(17,24,39,.6)';
+      msg.innerHTML = `<div style="background:white;padding:22px;border-radius:16px;box-shadow:var(--shadow);max-width:520px;text-align:center;">
+        <div style="font-size:36px">🕊️</div>
+        <h3 style="margin:8px 0 6px">ขอบคุณที่บอกความรู้สึก</h3>
+        <p style="color:#374151;line-height:1.7">ไม่ว่าเธอจะตัดสินใจยังไง ฉันก็ยังเคารพและหวังดีเสมอ หากวันหนึ่งพร้อมเปลี่ยนใจ ปุ่มสีชมพูยังอยู่ตรงนี้นะ</p>
+        <button id="closeNo" style="margin-top:10px;background:#111827;color:#fff;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;">ปิด</button>
+      </div>`;
+      document.body.appendChild(msg);
+      msg.querySelector('#closeNo').addEventListener('click',()=> msg.remove());
+    });
+  </script>
+</body>
+</html>
